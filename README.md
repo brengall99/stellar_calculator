@@ -23,5 +23,5 @@ The database
 
 
 ## Sources
-[1] ATHYG Dataset | https://github.com/astronexus/ATHYG-Database/tree/main
-[2] Constellation Data | https://www.datastro.eu/explore/dataset/88-constellations/export/
+* [1] ATHYG Dataset | https://github.com/astronexus/ATHYG-Database/tree/main
+* [2] Constellation Data | https://www.datastro.eu/explore/dataset/88-constellations/export/
