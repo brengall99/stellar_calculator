@@ -20,3 +20,8 @@ The database
 |TYC 	    |GLIESE 	|HIP       |9           |
 |HIP_X 	  |NONE 	  |HIP       |3           |
 |OTHER 	  |OTHER 	  |OTHER     |1           |
+
+
+## Sources
+[1] ATHYG Dataset | https://github.com/astronexus/ATHYG-Database/tree/main
+[2] Constellation Data | https://www.datastro.eu/explore/dataset/88-constellations/export/
