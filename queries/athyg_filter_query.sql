@@ -19,7 +19,7 @@ FROM
   ) AS subquery
 
   WHERE
-    dist_ly BETWEEN 0 AND 150 -- Limit maximum 'time' to 150 years ago
+    dist_ly BETWEEN 0 AND 120 -- Limit maximum 'time' to 120 years ago
   AND
     mag < 7.00 -- If apparent mag is greater than 7.00 star cannot be seen with naked eye
 
