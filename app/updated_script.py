@@ -11,25 +11,12 @@ def calculate_age(birthdate):
     return years, days, hours, minutes
 
 def calculate_light_age(star_distance_ly):
-    # Convert light-years to years
     years = int(star_distance_ly) 
-
-    # Calculate fractional part of years
     fractional_years = star_distance_ly - years
-
-    # Calculate days
     days = int(fractional_years * 365.25)
-
-    # Calculate fractional part of days
     fractional_days = (fractional_years * 365.25) - days
-
-    # Calculate hours
     hours = int(fractional_days * 24)
-
-    # Calculate fractional part of hours
     fractional_hours = (fractional_days * 24) - hours
-
-    # Calculate minutes
     minutes = int(fractional_hours * 60)
 
     return years, days, hours, minutes
