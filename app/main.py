@@ -7,26 +7,13 @@ Created on Tue Feb 13 19:42:05 2024
 """
 
 #-----------------------------------------------------------------------------/
-
 import pandas as pd
-from datetime import datetime
 from functions.age_calculator import AgeCalculator
 from functions.star_data_handler import star_data_finder
 from functions.distance_utils import find_star_by_distance, find_closest_values 
 from functions.constellation_loader import load_constellation_data
+from functions.utils import validate_birthdate
 #-----------------------------------------------------------------------------/
-
-
-def validate_birthdate(birthdate_str):
-    try:
-        birthdate = datetime.strptime(birthdate_str, "%d-%m-%Y")
-        if birthdate > datetime.now():
-            print("Birthdate cannot be in the future.")
-            return None
-        return birthdate
-    except ValueError:
-        print("Invalid date format. Please use dd-mm-yyyy.")
-        return None
         
 def main():
     while True:
