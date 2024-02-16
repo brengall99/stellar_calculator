@@ -9,12 +9,29 @@ Created on Fri Feb 16 19:33:06 2024
 import csv
 
 def load_constellation_data():
-    constellation_data = {}
+    
+    """
+    Loads constellation data from a CSV file into a dictionary.
+
+    Returns:
+        dict: A dictionary mapping IAU codes to Latin constellation names.
+    """
+
+    constellation_data = {}  # Initialize dictionary
+
     try:
         with open('data/constellation_data.csv', newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
+            reader = csv.DictReader(csvfile)  # Create a CSV reader object
+
             for row in reader:
-                constellation_data[row['IAU code']] = row['Latin name']
+                # Extract IAU code and Latin name from each row
+                iau_code = row['IAU code']
+                latin_name = row['Latin name']
+
+                # Add the IAU code and Latin name pair to the dictionary
+                constellation_data[iau_code] = latin_name
+
     except FileNotFoundError:
         print("Constellation data file not found.")
-    return constellation_data
+
+    return constellation_data  # Return the populated dictionary
