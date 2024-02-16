@@ -6,100 +6,81 @@ Created on Tue Feb 13 19:42:05 2024
 @author: brendangallagher
 """
 
+#-----------------------------------------------------------------------------/
 
-import csv
 import pandas as pd
 from datetime import datetime
-from calculators.find_closest_star import find_closest_values
-from calculators.age_calculator import AgeCalculator
+from functions.age_calculator import AgeCalculator
+from functions.star_data_handler import star_data_finder
+from functions.distance_utils import find_star_by_distance, find_closest_values 
+from functions.constellation_loader import load_constellation_data
+#-----------------------------------------------------------------------------/
 
-def load_constellation_data():
-    constellation_data = {}
-    try:
-        with open('data/constellation_data.csv', newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                constellation_data[row['IAU code']] = row['Latin name']
-    except FileNotFoundError:
-        print("Constellation data file not found.")
-    return constellation_data
 
-def find_closest_star(age_years):
-    
-    closest_star = None
-    closest_distance = float('inf')
-    next_closest_star = None
-    next_closest_distance = float('inf')
-    closest_constellation = None
-    proper_distance_ly = 0.0
-
-    try:
-        with open('data/star_data.csv', newline='') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                if 'dist_ly' in row:
-                    try:
-                        star_distance = float(row['dist_ly'])
-                    except ValueError:
-                        continue  
-                    distance = abs(age_years - star_distance)
-                    if distance < closest_distance:
-                        next_closest_star = closest_star
-                        next_closest_distance = closest_distance
-                        closest_star = row['proper'] if row['proper'] else row['gl']
-                        closest_constellation = row['constellation']
-                        closest_distance = distance
-                        proper_distance_ly = star_distance  
-
-                    elif distance < next_closest_distance:
-                        next_closest_star = row['proper'] if row['proper'] else row['gl']
-                        next_closest_distance = distance
-
-    except FileNotFoundError:
-        print("Star data file not found.")
-
-    return closest_star, closest_distance, closest_constellation, proper_distance_ly, next_closest_star, next_closest_distance
-
-def main():
-    birthdate_str = input(print("Birthdate: "))
+def validate_birthdate(birthdate_str):
     try:
         birthdate = datetime.strptime(birthdate_str, "%d-%m-%Y")
+        if birthdate > datetime.now():
+            print("Birthdate cannot be in the future.")
+            return None
+        return birthdate
     except ValueError:
         print("Invalid date format. Please use dd-mm-yyyy.")
-        return
+        return None
+        
+def main():
+    while True:
+        birthdate_str = \
+            input("\nEnter your birthdate in dd-mm-yyyy format: ")
+        birthdate = validate_birthdate(birthdate_str)
+        if birthdate:
+            break
     
-    age_years, age_days, age_hours, age_minutes = AgeCalculator.calculate_age(birthdate)
+    age_years, age_days, age_hours, age_minutes\
+        = AgeCalculator.calculate_age(birthdate)
     
-    closest_star, closest_distance, closest_constellation_iau, proper_distance_ly, next_closest_star, next_closest_distance = find_closest_star(age_years)
+    time_life = age_years + (age_days/365.25) + (age_hours/(365.25*24))\
+        + (age_minutes/(365.25*24*60))
     
+    # Use find_closest_values function to find the target value
+    df = pd.read_csv('data/star_data.csv')
+    target_value = find_closest_values(df, time_life)
+    
+    # Find information about the closest star
+    closest_star, closest_constellation\
+        = find_star_by_distance(target_value)
+    
+    # Load constellation data
     constellation_data = load_constellation_data()
     
-    closest_constellation = constellation_data.get(closest_constellation_iau, closest_constellation_iau)
+    # Get the name of the closest constellation
+    closest_constellation_name = \
+        constellation_data.get(closest_constellation, closest_constellation)
     
-    # Create a DataFrame from star_data.csv
-    df = pd.read_csv('data/star_data.csv')
-    # Use find_closest_values function to find the target value
-    target_value = find_closest_values(df, proper_distance_ly)
+    # Calculate the light age of the target value
+    light_age_years, light_age_days, light_age_hours, light_age_minutes\
+        = AgeCalculator.calculate_light_age(target_value)
     
-    light_age_years, light_age_days, light_age_hours, light_age_minutes = AgeCalculator.calculate_light_age(target_value)
+    # Print information
+    print(f"\nYour current age is {age_years} years, {age_days} days, "
+          f"{age_hours} hours, and {age_minutes} minutes old.")
+    print(f"\nThe light from the star '{closest_star}', in the constellation "
+          f"{closest_constellation_name}, is the star that emitted light"
+          " closest to your birth")
+    print(f"\nLight from '{closest_star}' was emitted approximately "
+          f"{light_age_years} years, {light_age_days} days, {light_age_hours} "
+          f"hours, and {light_age_minutes} minutes ago.")
     
-    print(target_value)
-    
-    print(f"\nYou are {age_years} years, {age_days} days, {age_hours} hours, and {age_minutes} minutes old.")
-    if closest_star:
-        print(f"The light from the closest star '{closest_star}' in the constellation {closest_constellation},")
-        print(f"emitted approximately {light_age_years} years, {light_age_days} days, {light_age_hours} hours,")
-        print(f"and {light_age_minutes} minutes ago.")
-    else:
-        print("No star data found.")
-    
-    if next_closest_star:
-        print(f"The light from the next closest star '{next_closest_star}' at a distance of {next_closest_distance} ly.")
-    else:
-        print("No next closest star found.")
+    proper_name, gaia_name, hyg_name, id_name, distance_lightyears,\
+        const, mag, absmag, spect, ra, dec = star_data_finder(closest_star)
 
 if __name__ == "__main__":
     main()
+    
+    
+#-----------------------------------------------------------------------------/
+
+
 
 
     
