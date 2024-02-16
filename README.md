@@ -1,5 +1,5 @@
 # stellar_calculator
-A program that requests a users birthdate, and gives them information on the star that emitted light on the day of their birth!
+A program that requests a users birthdate, then gives them information on the star that emitted light closest the day of their birth!
 
 ### Data
 The project uses the ATHYG Database, via https://github.com/astronexus/ATHYG-Database/tree/main 
