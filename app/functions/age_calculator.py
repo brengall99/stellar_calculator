@@ -30,7 +30,7 @@ class AgeCalculator:
             tuple: A tuple containing (years, days, hours, minutes).
         """
 
-        today = datetime.today()
+        today = datetime.now().date()
         # Calculate difference between today and birthdate
         age_delta = today - birthdate  
 

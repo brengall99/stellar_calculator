@@ -9,7 +9,6 @@ Created on Fri Feb 16 19:34:59 2024
 import datetime
 
 def validate_birthdate(birthdate_str):
-    
     """
     Validates a birthdate string in the format dd-mm-yyyy.
 
@@ -17,23 +16,21 @@ def validate_birthdate(birthdate_str):
         birthdate_str (str): The birthdate string to validate.
 
     Returns:
-        datetime.date: The validated birthdate as a datetime object, 
-        or None if invalid.
+        tuple: A tuple containing the validated birthdate as a datetime object or None,
+               and an error message if the date is invalid or None if the date is valid.
     """
     
     try:
         # Attempt to convert birthday string to datetime object
-        birthdate = datetime.datetime.strptime(birthdate_str, "%d-%m-%Y")
-        
-        # Check if the birthdate is in the future and raise error
-        if birthdate > datetime.datetime.now():
-            print("Birthdate cannot be in the future.")
-            return None
-        
-        # Return the valid birthdate
-        return birthdate
+        valid_birthdate = datetime.datetime.strptime(birthdate_str, "%d-%m-%Y").date()
+
+        # Check if the birthdate is in the future
+        if valid_birthdate > datetime.datetime.now().date():
+            return None, "Birthdate cannot be in the future."
+
+        # Return the valid birthdate and None for the error message
+        return valid_birthdate, None
     
     except ValueError:
-        #  Handle errors when format is invalid
-        print("Invalid date format. Please use dd-mm-yyyy.")
-        return None
+        # Return None and the error message when format is invalid
+        return None, "Invalid date format. Please use dd-mm-yyyy."

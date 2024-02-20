@@ -57,9 +57,9 @@ def plot_milky_way(ax):
 
 def plot_stars(star_data, highlight_identifier=None, dpi=100):
     # Create a Figure object
-    fig = Figure(figsize=(10, 5), dpi=dpi)
+    fig = Figure(figsize=(7, 4), dpi=dpi)
     ax = fig.add_subplot(111, projection="aitoff")
-    ax.set_title("Stars on Aitoff Projection")
+    ax.set_title("The Night Sky")
     
     # Normalize the magnitude to a scale suitable for marker size
     max_marker_size = 10
@@ -78,6 +78,7 @@ def plot_stars(star_data, highlight_identifier=None, dpi=100):
     ra_celestial_equator_rad = np.radians(ra_celestial_equator)
     dec_celestial_equator_rad = np.radians(dec_celestial_equator)
     ax.plot(ra_celestial_equator_rad, dec_celestial_equator_rad, color='green', lw=1, label='Celestial Equator')
+
     
     # Ensure gridlines are displayed
     ax.grid(True, which='both', axis='both', color='gray', linestyle='--', linewidth=0.5)
@@ -85,7 +86,17 @@ def plot_stars(star_data, highlight_identifier=None, dpi=100):
     # Highlight Polaris with a label if present
     polaris = star_data[star_data['hip'] == 11767]
     if not polaris.empty:
-        ax.scatter(polaris['ra_rad'], polaris['dec_rad'], s=50, color='green', label='Polaris')
+        ax.scatter(polaris['ra_rad'], polaris['dec_rad'], s=50, color='black', label='Polaris')
+
+    # Highlight Sirius with a label if present
+    sirius = star_data[star_data['hip'] == 32349]
+    if not sirius.empty:
+        ax.scatter(sirius['ra_rad'], sirius['dec_rad'], s=50, color='green', label='Sirius')
+
+    # Highlight Alpha Centauri with a label if present
+    alphacentauri = star_data[star_data['hip'] == 71681]
+    if not alphacentauri.empty:
+        ax.scatter(alphacentauri['ra_rad'], alphacentauri['dec_rad'], s=50, color='orange', label='Alpha Centauri')
     
     if highlight_identifier is not None:
         # Determine whether the identifier is likely an ID or a name
@@ -98,12 +109,13 @@ def plot_stars(star_data, highlight_identifier=None, dpi=100):
             highlight_star = star_data[(star_data['proper'] == highlight_identifier) | (star_data['gl'] == highlight_identifier)]
         
         if not highlight_star.empty:
-            ax.scatter(highlight_star['ra_rad'], highlight_star['dec_rad'], s=50, color='red', label=f"Highlighted: {highlight_identifier}")
+            ax.scatter(highlight_star['ra_rad'], highlight_star['dec_rad'], s=50, color='red', label=f"{highlight_identifier}")
         else:
             print(f"No star found with identifier: {highlight_identifier}")
 
     # Your existing code to finalize the plot...
-    ax.legend(loc='upper right')
+    #ax.legend(loc='upper right')
+    ax.legend(loc='upper right', bbox_to_anchor=(1.1, 1.1), prop={'size': 8})
     return fig
 
 if __name__ == "__main__":
